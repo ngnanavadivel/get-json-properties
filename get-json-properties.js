@@ -6,6 +6,10 @@ toBeParsed = {
     "coord": [-73.856077,
       40.848447
     ],
+    "neighbours":[
+    	{name: 'Shreenidhy', carsTheyOwn:['Tata Indica v2', 'BMW x64']},
+      	{name: 'Roshan', carsTheyOwn:['Maruthi Alto k10', 'Mercedes Benz c350i']}
+    ],
     "street": "Morris Park Ave",
     "zipcode": "10462"
   },
@@ -43,20 +47,21 @@ function getPropertyNames(jsonObject) {
 
 /* Recursive Implementation */
 function getProperties(jsonValue, properties, parentProperty, isParentTypeArray, recursionLevel) {
-  console.log('[Inputs] : parentProperty -> ' + parentProperty + ', ' + 'isParentTypeArray -> ' + isParentTypeArray + ', rrecursionLevel -> ' + recursionLevel);
+  console.log('[Inputs] : parentProperty -> ' + parentProperty + ', ' + 'isParentTypeArray -> ' + isParentTypeArray + ', recursionLevel -> ' + recursionLevel);
   for (prop in jsonValue) {
     console.log('1. checking variable -> ' + prop);
     var value = jsonValue[prop];
     printType(value);
     if (isArray(value) || isComposite(value)) {
+      var newParentProperty = parentProperty;
       if (!isParentTypeArray) {
         newParentProperty = (parentProperty === null) ? prop : parentProperty + '.' + prop;
       }
-      newIsParentTypeArray = isArray(value);
+      var newIsParentTypeArray = isArray(value);
 
       getProperties(value, properties, newParentProperty, newIsParentTypeArray, recursionLevel + 1);
     } else {
-      var newPropName = parentProperty == null ? prop : isParentTypeArray ? parentProperty : parentProperty + '.' + prop;
+      var newPropName = ((parentProperty == null) ? prop : (isParentTypeArray ? parentProperty : (parentProperty + '.' + prop)));
 
       if (properties.indexOf(newPropName) == -1) {
         console.log('3.' + printSpacing(60, '-') + ' Pushing property -> ' + newPropName);
@@ -85,8 +90,8 @@ function printType(value) {
 
 function printSpacing(count, symbol) {
   var line = symbol;
-	while(count-- >= 1) {
-  	line = line + symbol;
+  while (count-- >= 1) {
+    line = line + symbol;
   }
   return line;
 }
@@ -97,25 +102,58 @@ alert(getPropertyNames(toBeParsed));
 
 /* Sample Output */
 /*
-[Inputs] : parentProperty -> null, isParentTypeArray -> false, rrecursionLevel -> 1
+[Inputs] : parentProperty -> null, isParentTypeArray -> false, recursionLevel -> 1
  1. checking variable -> _id
  2. Value is a SIMPLE type.
  3.------------------------------------------------------------- Pushing property -> _id
  1. checking variable -> address
  2. Value is an OBJECT
- [Inputs] : parentProperty -> address, isParentTypeArray -> false, rrecursionLevel -> 2
+ [Inputs] : parentProperty -> address, isParentTypeArray -> false, recursionLevel -> 2
  1. checking variable -> building
  2. Value is a SIMPLE type.
  3.------------------------------------------------------------- Pushing property -> address.building
  1. checking variable -> coord
  2. Value is an ARRAY
- [Inputs] : parentProperty -> address.coord, isParentTypeArray -> true, rrecursionLevel -> 3
+ [Inputs] : parentProperty -> address.coord, isParentTypeArray -> true, recursionLevel -> 3
  1. checking variable -> 0
  2. Value is a SIMPLE type.
  3.------------------------------------------------------------- Pushing property -> address.coord
  1. checking variable -> 1
  2. Value is a SIMPLE type.
  4. address.coord is already added. Hence ignored. !!!
+ 1. checking variable -> neighbours
+ 2. Value is an ARRAY
+ [Inputs] : parentProperty -> address.neighbours, isParentTypeArray -> true, recursionLevel -> 3
+ 1. checking variable -> 0
+ 2. Value is an OBJECT
+ [Inputs] : parentProperty -> address.neighbours, isParentTypeArray -> false, recursionLevel -> 4
+ 1. checking variable -> name
+ 2. Value is a SIMPLE type.
+ 3.------------------------------------------------------------- Pushing property -> address.neighbours.name
+ 1. checking variable -> carsTheyOwn
+ 2. Value is an ARRAY
+ [Inputs] : parentProperty -> address.neighbours.carsTheyOwn, isParentTypeArray -> true, recursionLevel -> 5
+ 1. checking variable -> 0
+ 2. Value is a SIMPLE type.
+ 3.------------------------------------------------------------- Pushing property -> address.neighbours.carsTheyOwn
+ 1. checking variable -> 1
+ 2. Value is a SIMPLE type.
+ 4. address.neighbours.carsTheyOwn is already added. Hence ignored. !!!
+ 1. checking variable -> 1
+ 2. Value is an OBJECT
+ [Inputs] : parentProperty -> address.neighbours, isParentTypeArray -> false, recursionLevel -> 4
+ 1. checking variable -> name
+ 2. Value is a SIMPLE type.
+ 4. address.neighbours.name is already added. Hence ignored. !!!
+ 1. checking variable -> carsTheyOwn
+ 2. Value is an ARRAY
+ [Inputs] : parentProperty -> address.neighbours.carsTheyOwn, isParentTypeArray -> true, recursionLevel -> 5
+ 1. checking variable -> 0
+ 2. Value is a SIMPLE type.
+ 4. address.neighbours.carsTheyOwn is already added. Hence ignored. !!!
+ 1. checking variable -> 1
+ 2. Value is a SIMPLE type.
+ 4. address.neighbours.carsTheyOwn is already added. Hence ignored. !!!
  1. checking variable -> street
  2. Value is a SIMPLE type.
  3.------------------------------------------------------------- Pushing property -> address.street
@@ -130,10 +168,10 @@ alert(getPropertyNames(toBeParsed));
  3.------------------------------------------------------------- Pushing property -> cuisine
  1. checking variable -> grades
  2. Value is an ARRAY
- [Inputs] : parentProperty -> grades, isParentTypeArray -> true, rrecursionLevel -> 2
+ [Inputs] : parentProperty -> grades, isParentTypeArray -> true, recursionLevel -> 2
  1. checking variable -> 0
  2. Value is an OBJECT
- [Inputs] : parentProperty -> grades, isParentTypeArray -> false, rrecursionLevel -> 3
+ [Inputs] : parentProperty -> grades, isParentTypeArray -> false, recursionLevel -> 3
  1. checking variable -> date
  2. Value is a SIMPLE type.
  3.------------------------------------------------------------- Pushing property -> grades.date
@@ -145,7 +183,7 @@ alert(getPropertyNames(toBeParsed));
  3.------------------------------------------------------------- Pushing property -> grades.score
  1. checking variable -> 1
  2. Value is an OBJECT
- [Inputs] : parentProperty -> grades, isParentTypeArray -> false, rrecursionLevel -> 3
+ [Inputs] : parentProperty -> grades, isParentTypeArray -> false, recursionLevel -> 3
  1. checking variable -> date
  2. Value is a SIMPLE type.
  4. grades.date is already added. Hence ignored. !!!
@@ -157,7 +195,7 @@ alert(getPropertyNames(toBeParsed));
  4. grades.score is already added. Hence ignored. !!!
  1. checking variable -> 2
  2. Value is an OBJECT
- [Inputs] : parentProperty -> grades, isParentTypeArray -> false, rrecursionLevel -> 3
+ [Inputs] : parentProperty -> grades, isParentTypeArray -> false, recursionLevel -> 3
  1. checking variable -> date
  2. Value is a SIMPLE type.
  4. grades.date is already added. Hence ignored. !!!
@@ -169,7 +207,7 @@ alert(getPropertyNames(toBeParsed));
  4. grades.score is already added. Hence ignored. !!!
  1. checking variable -> 3
  2. Value is an OBJECT
- [Inputs] : parentProperty -> grades, isParentTypeArray -> false, rrecursionLevel -> 3
+ [Inputs] : parentProperty -> grades, isParentTypeArray -> false, recursionLevel -> 3
  1. checking variable -> date
  2. Value is a SIMPLE type.
  4. grades.date is already added. Hence ignored. !!!
